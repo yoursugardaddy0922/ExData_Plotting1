@@ -1,59 +1,63 @@
-#download and unzip the file
-fileUrl<-"https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip"
-download.file(fileUrl,destfile ="C:/Users/123/Desktop/data/power.zip")
-power<-unzip("C:/Users/123/Desktop/data/power.zip",exdir = "C:/Users/123/Desktop/data")
-#read data from the dates 2007-02-01 and 2007-02-02
-file<-file("C:/Users/123/Desktop/data/power/household_power_consumption.txt")
-power_data<-read.table(text = grep("^[1,2]/2/2007",readLines(file),value=TRUE),na.strings = "?",sep=";",col.names = c("Date","Time","Global_active_power","Global_reactive_power","Voltage","Global_intensity","Sub_metering_1","Sub_metering_2","Sub_metering_3"))
+Introduction
 
-#plot 1
-##creating a png file named plot1
-png(filename ="C:/Users/123/Desktop/plot/plot1.png",width = 480,height = 480,units = "px" )
-##plotting 
-hist(power_data$Global_active_power,col="red",xlab = "Global Active Power (kilowatts)",ylab = "Frequency",main="Global Active Power")
-#close the device
-dev.off()
+This assignment uses data from the UC Irvine Machine Learning Repository, a popular repository for machine learning datasets. In particular, we will be using the "Individual household electric power consumption Data Set" which I have made available on the course web site:
 
-#plot 2
-##Converting date and time variables
-power_data$Date <- as.Date(power_data$Date, format = '%d/%m/%Y')
-power_data$DateTime <- as.POSIXct(paste(power_data$Date, power_data$Time))
-Sys.setlocale(category = "LC_ALL", locale = "english")
+    Dataset: Electric power consumption [20Mb]
 
-#creating a png file named plot2
-png(filename = "C:/Users/123/Desktop/plot/plot2.png",width = 480,height = 480,units = "px")
-#plotting
-plot(power_data$DateTime,power_data$Global_active_power,xlab = "",ylab = "Global Active Power (kilowatt)",type="l")
-#close the device
-dev.off()
+    Description: Measurements of electric power consumption in one household with a one-minute sampling rate over a period of almost 4 years. Different electrical quantities and some sub-metering values are available.
 
-#plot 3
-Sys.setlocale(category = "LC_ALL", locale = "english")
-#creating a png file called plot3
-png(filename = "C:/Users/123/Desktop/plot/plot3.png",width = 480,height = 480,units = "px")
-plot(power_data$DateTime,power_data$Sub_metering_1,xlab = "",ylab = "Energy sub metering",type = "l")
-lines(power_data$DateTime,power_data$Sub_metering_2,col="red")
-lines(power_data$DateTime,power_data$Sub_metering_3,col="blue")
-legend("topright",lwd=1,col=c("black","red","blue"),legend = c("Sub_metering_1","Sub_metering_2","Sub_meterimg_3"))
-#close the device
-dev.off()        
+The following descriptions of the 9 variables in the dataset are taken from the UCI web site:
 
-#plot 4
-Sys.setlocale(category = "LC_ALL", locale = "english")
-#creating a png file called plot4
-png(filename = "C:/Users/123/Desktop/plot/plot4.png",width = 480,height = 480,units = "px")
-par(mfrow=c(2,2))
-#the topleft graph
-plot(power_data$DateTime,power_data$Global_active_power,xlab = "",ylab = "Global Active Power",type = "l")
-#the topright graph
-plot(power_data$DateTime,power_data$Voltage,xlab = "datetime",ylab = "Voltage",type = "l")
-#The bottom left graph
-plot(power_data$DateTime,power_data$Sub_metering_1,xlab = "",ylab = "Energy sub metering",type = "l")
-lines(power_data$DateTime,power_data$Sub_metering_2,col="red")
-lines(power_data$DateTime,power_data$Sub_metering_3,col="blue")
-legend("topright",lwd=1,col=c("black","red","blue"),legend = c("Sub_metering_1","Sub_metering_2","Sub_meterimg_3"))
-#The bottom right graph
-plot(power_data$DateTime,power_data$Global_reactive_power,xlab = "datetime",ylab = "Global_reactive_power",type = "l")
-#close the device
-dev.off()
+    Date: Date in format dd/mm/yyyy
+    Time: time in format hh:mm:ss
+    Global_active_power: household global minute-averaged active power (in kilowatt)
+    Global_reactive_power: household global minute-averaged reactive power (in kilowatt)
+    Voltage: minute-averaged voltage (in volt)
+    Global_intensity: household global minute-averaged current intensity (in ampere)
+    Sub_metering_1: energy sub-metering No. 1 (in watt-hour of active energy). It corresponds to the kitchen, containing mainly a dishwasher, an oven and a microwave (hot plates are not electric but gas powered).
+    Sub_metering_2: energy sub-metering No. 2 (in watt-hour of active energy). It corresponds to the laundry room, containing a washing-machine, a tumble-drier, a refrigerator and a light.
+    Sub_metering_3: energy sub-metering No. 3 (in watt-hour of active energy). It corresponds to an electric water-heater and an air-conditioner.
 
+Loading the data
+
+When loading the dataset into R, please consider the following:
+
+    The dataset has 2,075,259 rows and 9 columns. First calculate a rough estimate of how much memory the dataset will require in memory before reading into R. Make sure your computer has enough memory (most modern computers should be fine).
+
+    We will only be using data from the dates 2007-02-01 and 2007-02-02. One alternative is to read the data from just those dates rather than reading in the entire dataset and subsetting to those dates.
+
+    You may find it useful to convert the Date and Time variables to Date/Time classes in R using the strptime() and as.Date() functions.
+
+    Note that in this dataset missing values are coded as ?.
+
+Making Plots
+
+Our overall goal here is simply to examine how household energy usage varies over a 2-day period in February, 2007. Your task is to reconstruct the following plots below, all of which were constructed using the base plotting system.
+
+First you will need to fork and clone the following GitHub repository: https://github.com/rdpeng/ExData_Plotting1
+
+For each plot you should
+
+    Construct the plot and save it to a PNG file with a width of 480 pixels and a height of 480 pixels.
+
+    Name each of the plot files as plot1.png, plot2.png, etc.
+
+    Create a separate R code file (plot1.R, plot2.R, etc.) that constructs the corresponding plot, i.e. code in plot1.R constructs the plot1.png plot. Your code file should include code for reading the data so that the plot can be fully reproduced. You should also include the code that creates the PNG file.
+
+    Add the PNG file and R code file to your git repository
+
+When you are finished with the assignment, push your git repository to GitHub so that the GitHub version of your repository is up to date. There should be four PNG files and four R code files.
+
+The four plots that you will need to construct are shown below.
+Plot 1
+
+plot of chunk unnamed-chunk-2
+Plot 2
+
+plot of chunk unnamed-chunk-3
+Plot 3
+
+plot of chunk unnamed-chunk-4
+Plot 4
+
+plot of chunk unnamed-chunk-5
