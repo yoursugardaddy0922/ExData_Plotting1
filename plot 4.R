@@ -11,7 +11,7 @@ plot(power_data$DateTime,power_data$Voltage,xlab = "datetime",ylab = "Voltage",t
 plot(power_data$DateTime,power_data$Sub_metering_1,xlab = "",ylab = "Energy sub metering",type = "l")
 lines(power_data$DateTime,power_data$Sub_metering_2,col="red")
 lines(power_data$DateTime,power_data$Sub_metering_3,col="blue")
-legend("topright",lwd=1,col=c("black","red","blue"),legend = c("Sub_metering_1","Sub_metering_2","Sub_meterimg_3"))
+legend("topright",lwd=1,col=c("black","red","blue"),legend = c("Sub_metering_1","Sub_metering_2","Sub_metering_3"))
 #The bottom right graph
 plot(power_data$DateTime,power_data$Global_reactive_power,xlab = "datetime",ylab = "Global_reactive_power",type = "l")
 #close the device
